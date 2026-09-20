@@ -1,115 +1,687 @@
-# 函数与模块化
+# 第3讲 · 简单数据类型（续） 
 
-## 学习目标
+## 教学目标
 
-- 掌握多种函数定义方式
-- 理解作用域和闭包概念
-- 学会使用模块化组织代码
+**知识目标**
+1. 掌握字符串的索引、切片基本操作；
+2. 掌握字符串常用方法：strip()、split()、join()、replace()、find()、upper()/lower()、count()、startswith()/endswith()；
+3. 掌握三种字符串格式化方式：%格式化、format()、f-string；
+4. 掌握input()与print()的基本用法，理解input()返回值的类型特点。
+
+**能力目标**
+1. 能运用字符串方法完成文本清洗、分词分句等基础文本处理任务；
+2. 能正确完成输入数据的类型转换，避免类型错误；
+3. 能综合运用字符串格式化生成结构化的提示词模板。
+
+**素养目标**
+1. 结合AI应用场景，体会"数据清洗是AI落地的第一步"，培养严谨的数据处理习惯；
+2. 通过提示词模板编写，初步建立"人机协作"的工程思维。
+
+
+```
+用户: 你好！  请问今天天气怎么样？？
+AI:  您好！今天多云转晴，气温25℃哦。  
+用户:那明天呢？   明天会下雨吗？  
+AI:明天有小雨，出门请记得带伞哦！！
+```
+
+##  回顾
+
+### 复习提问
+
+1. Python中简单数据类型有哪些？（int、float、bool、str）
+2. 如何查看一个变量的类型？（`type()`）
+3. `'123'` 和 `123` 一样吗？（不一样，前者是字符串，后者是整数）
+
+### 问题
+
+同学们，现在人工智能聊天机器人非常流行。大家想一想，当你和AI助手对话时，AI收到的'你好  请问今天天气怎么样？？'这样一条消息，计算机能直接理解吗？"
+
+实际上，AI在理解我们的话之前，必须先做一件基础工作——**文本清洗**：
+- 去掉句首句尾多余的空格 → 用 `strip()`
+- 把一整段对话按行、按句拆开 → 用 `split()`
+- 把用户名字、问题填进固定模板 → 用字符串格式化
+
+今天这节课，我们就来学习字符串操作与输入输出，亲手做一做AI工程师每天都在做的'数据预处理'工作。"
+
+## 字符串基本操作
+
+### 字符串的表示与特性
+
+### 1. 字符串的定义
+
+字符串是**用引号括起来的字符序列**，引号可以是单引号、双引号或三引号：
+
+```python
+s1 = 'Hello'
+s2 = "Hello"
+s3 = """多行
+字符串"""
+```
+
+**教学提示**：三引号用于多行文本（如长文档、提示词模板），这是后续AI场景的伏笔。
+
+### 2. 字符串的重要特性：不可变（immutable）
+
+```python
+s = "hello"
+s[0] = "H"        # ❌ 报错！TypeError: 'str' object does not support item assignment
+s = "Hello"       # ✅ 正确：不是修改，而是重新赋值
+```
+
+**易错点强调**：字符串不能"就地修改"，所有方法（replace、upper等）都是**返回新字符串**，原字符串不变。
+
+```python
+s = "hello"
+s.upper()
+print(s)          # 输出 hello！s本身没变
+s = s.upper()     # ✅ 必须重新赋值
+print(s)          # 输出 HELLO
+```
+
+## （二）索引与切片（8分钟）
+
+### 1. 索引（index）
+
+字符串中每个字符都有编号（下标），**从0开始**：
+
+```python
+s = "PYTHON"
+#    012345   （正向索引）
+#   -6-5-4-3-2-1 （负向索引）
+
+print(s[0])     # P
+print(s[5])     # N
+print(s[-1])    # N（最后一个字符）
+print(s[-6])    # P
+```
+
+**易错点**：
+- 索引越界：`s[6]` 报错 `IndexError: string index out of range`（长度为6的字符串，最大索引是5）。
+
+### 2. 切片（slice）⭐
+
+切片语法：`字符串[开始:结束:步长]`，遵循"**左闭右开**"原则——包含开始位置，不包含结束位置。
+
+```python
+s = "PYTHON"
+
+print(s[0:3])     # PYT  （取索引0、1、2）
+print(s[3:])      # HON  （从索引3取到最后）
+print(s[:3])      # PYT  （从头取到索引3之前）
+print(s[:])       # PYTHON（整个字符串）
+print(s[::2])     # PTO  （每隔一个取一个）
+print(s[::-1])    # NOHTYP（逆序！经典用法）
+```
+
+**三个特殊应用（板书）**：
+
+```python
+s = "PYTHON"
+s[-1]        # 取最后一个字符
+s[::-1]      # 字符串逆序
+s[1:-1]      # 去掉首尾字符 → 'YTHO'
+```
+
+**课堂互动（1分钟）**：让学生口答 `s[1:4]`、`s[-2:]` 的结果。
+
+### 3. 索引切片的小结口诀
+
+> "**切片左闭右开，开始包含结束不包含；冒号缺省取到头，步长为负倒着走。**"
+
+## （三）字符串常用操作方法（10分钟）⭐【本课重点】
+
+### 1. strip() —— 去除首尾空白字符 【AI赋能点①：文本噪声清洗】
+
+```python
+text = "   你好，世界！   "
+print(text.strip())        # '你好，世界！'（首尾空格被清除）
+print(text.lstrip())       # '你好，世界！   '（只去左边）
+print(text.rstrip())       # '   你好，世界！'（只去右边）
+```
+
+**AI场景讲解（教师话术）**：
+
+> "在NLP（自然语言处理）中，从网页、聊天记录里爬取或收集来的原始文本，往往带有大量'噪声'——首尾空格、制表符、换行符。这些噪声会让AI统计词频时把'你好'和' 你好 '当成两个不同的词。`strip()` 就是数据清洗的第一道工序，相当于给文本'洗头洗脸'。"
+
+```python
+# 真实感示例：清洗用户输入
+user_input = "\n\n   帮我写一首关于秋天的诗  \t\n"
+clean_text = user_input.strip()
+print(repr(clean_text))    # '帮我写一首关于秋天的诗'
+```
+
+**易错点**：strip()只去**首尾**，中间的空白不会动：
+
+```python
+"你  好".strip()    # '你  好'（中间的空格保留）
+```
+
+### 2. split() —— 字符串分割 【AI赋能点②：对话分句处理】
+
+语法：`split(分隔符)`，默认按**空白字符**（空格、换行、制表符）分割，返回一个**列表**。
+
+```python
+s = "苹果,香蕉,橘子"
+print(s.split(","))        # ['苹果', '香蕉', '橘子']
+
+dialogue = "你好！今天天气怎么样？明天会下雨吗？"
+print(dialogue.split("？"))  # ['你好！今天天气怎么样', '明天会下雨吗', '']
+```
+
+**AI场景讲解（教师话术）**：
+
+> "AI客服系统收到一整段用户留言时，需要先把长文本'切句'，一句一句理解。`split('。')`、`split('！')`、`split('？')` 就是最简单的分句工具——把长对话切成短句子，再逐句送入AI模型处理。这也是后面我们要做的实践任务。"
+
+**易错点**：
+- split()返回的是**列表**，不是字符串；
+- 分隔符连续出现会产生空字符串元素，需要过滤（实践任务中会处理）。
+
+### 3. join() —— 合并字符串（split的逆操作）
+
+```python
+words = ['我', '爱', 'Python']
+print("".join(words))      # 我爱Python
+print("-".join(words))     # 我-爱-Python
+```
+
+**与"+"对比**：
+
+```python
+# 大量字符串拼接时，join效率远高于 +
+parts = ["第" + str(i) + "条" for i in range(1000)]
+result = "".join(parts)    # 推荐写法
+```
+
+### 4. replace() —— 替换
+
+```python
+s = "我喜欢Java"
+s2 = s.replace("Java", "Python")
+print(s2)      # 我喜欢Python
+print(s)       # 我喜欢Java（原字符串不变！）
+```
+
+**AI场景**：敏感词过滤、口语规范化（把"yyds"替换成规范表达）：
+
+```python
+text = "这个电影yyds，绝绝子"
+text = text.replace("yyds", "非常棒").replace("绝绝子", "太好了")
+```
+
+### 5. find() 与 index() —— 查找子串位置
+
+```python
+s = "hello world"
+print(s.find("o"))       # 4（第一次出现的位置）
+print(s.find("o", 5))    # 7（从索引5开始找）
+print(s.find("xyz"))     # -1（找不到返回-1）
+print(s.index("xyz"))    # ❌ 报错 ValueError
+```
+
+**易错点对比（板书表格）**：
+
+| 方法 | 找不到时 |
+|------|----------|
+| find() | 返回 -1 |
+| index() | 抛出 ValueError |
+
+### 6. 大小写转换与判断类方法（快速带过）
+
+```python
+s = "Python"
+s.upper()      # 'PYTHON'
+s.lower()      # 'python'
+s.title()      # 'Python'（每个单词首字母大写）
+
+s.startswith("Py")   # True
+s.endswith("on")     # True
+s.count("o")         # 1（统计子串出现次数）
+len(s)               # 6（内置函数：字符串长度）
+```
+
+**课堂快问快答（1分钟）**：
+- `"a-b-c".split("-")` 的结果是？
+- `"-".join(["2026", "09", "20"])` 的结果是？
+
+### 7. 常用方法小结表（PPT展示）
+
+| 方法 | 功能 | 返回值 |
+|------|------|--------|
+| strip() | 去除首尾空白 | 新字符串 |
+| split(sep) | 按分隔符拆分 | 列表 |
+| join(iter) | 用分隔符连接 | 新字符串 |
+| replace(old, new) | 替换 | 新字符串 |
+| find(sub) | 查找位置 | 索引或-1 |
+| upper()/lower() | 大小写转换 | 新字符串 |
+| count(sub) | 统计次数 | 整数 |
+| startswith()/endswith() | 前缀/后缀判断 | 布尔值 |
+
+**再次强调**：以上方法均**不修改原字符串**（不可变特性）。
+
+## （四）字符串格式化（7分钟）⭐【AI赋能点③：提示词模板】
+
+### 1. f-string（主推，Python 3.6+）
+
+```python
+name = "小明"
+age = 18
+print(f"我叫{name}，今年{age}岁")
+# 我叫小明，今年18岁
+
+# 格式化数字
+pi = 3.1415926
+print(f"圆周率约为{pi:.2f}")    # 圆周率约为3.14
+print(f"{0.256:.1%}")           # 25.6%
+```
+
+**易错点**：f-string里**变量名拼写错误直接报错**，变量两侧的花括号不能漏。
+
+### 2. format() 方法
+
+```python
+name = "小明"
+age = 18
+print("我叫{}，今年{}岁".format(name, age))
+print("我叫{0}，今年{1}岁，{0}很开心".format(name, age))  # 可指定顺序
+print("我叫{n}，今年{a}岁".format(n=name, a=age))          # 可命名
+```
+
+### 3. % 格式化（了解，旧代码中常见）
+
+```python
+print("我叫%s，今年%d岁" % ("小明", 18))
+# %s 字符串，%d 整数，%f 浮点数
+```
+
+**【AI赋能点③：提示词模板】教师话术**：
+
+> "大家用过AI聊天工具吧？你输入'帮我写一篇关于春天的散文，300字'，AI就能写文章。AI应用开发中，工程师会把用户填写的内容自动填入固定的'提示词模板'。字符串格式化就是干这个的——模板不动，内容动态填入。"
+
+```python
+# AI提示词模板生成器（本课实践的雏形）
+template = "你是一位{role}。请用{style}的语言，为{audience}写一篇关于{topic}的文章，字数{words}字。"
+
+prompt = template.format(
+    role="小学语文老师",
+    style="活泼生动",
+    audience="三年级学生",
+    topic="春天",
+    words=300
+)
+print(prompt)
+# 输出：你是一位小学语文老师。请用活泼生动的语言，为三年级学生写一篇关于春天的文章，字数300字。
+```
+
+### 4. 三种格式化方式对比（板书）
+
+| 方式 | 示例 | 特点 |
+|------|------|------|
+| f-string | `f"你好，{name}"` | 简洁直观，**推荐使用** |
+| format() | `"你好，{}".format(name)` | 模板可复用，适合AI模板场景 |
+| % | `"你好，%s" % name` | 旧式写法，能读懂即可 |
 
 ---
 
-## 一、函数基础
+# 环节三：输入输出与类型转换（理论，20分钟）
 
-### 1.1 函数声明
+## （一）输出 print()（5分钟）
 
-```javascript
-// 函数声明
-function greet(name) {
-  return `Hello, ${name}!`;
-}
+### 1. 基本用法
 
-// 函数表达式
-const add = function(a, b) {
-  return a + b;
-};
-
-// 箭头函数
-const multiply = (a, b) => a * b;
+```python
+print("Hello, World!")          # 输出字符串
+print(123)                       # 输出数字
+print("a", "b", "c")             # 多个内容，默认用空格分隔
 ```
 
-### 1.2 默认参数
+### 2. 两个关键参数：sep 和 end
 
-```javascript
-function greet(name = 'Guest') {
-  return `Welcome, ${name}!`;
-}
+```python
+print("2026", "09", "20", sep="-")     # 2026-09-20（自定义分隔符）
+print("你好", end="")                    # end="" 表示不换行
+print("世界")                            # 与上一行连起来输出：你好世界
+print("A", end=" >>> ")
+print("B")                               # A >>> B
+```
 
-greet();        // "Welcome, Guest!"
-greet('Alice'); // "Welcome, Alice!"
+**默认行为**：sep=" "（空格分隔），end="\n"（结尾换行）。
+
+**易错点**：print输出数字和字符串时不需要像其他语言那样考虑类型，但**拼接**时必须类型一致：
+
+```python
+age = 18
+print("我" + age + "岁")      # ❌ TypeError：str和int不能用+
+print("我" + str(age) + "岁")  # ✅ 先转换：我18岁
+print(f"我{age}岁")           # ✅ f-string 最省事
+```
+
+## （二）输入 input()（5分钟）
+
+### 1. 基本用法
+
+```python
+name = input("请输入你的名字：")
+print(f"你好，{name}！")
+```
+
+**input()的三个要点（板书）**：
+1. 括号里的字符串是**提示信息**，会显示给用户看；
+2. 程序会**暂停等待**用户输入，按回车后继续；
+3. ⚠️ **重点：input()的返回值永远是字符串 str 类型！**
+
+### 2. 验证：input()返回值的类型
+
+现场演示（教师敲，学生观察）：
+
+```python
+x = input("请输入一个数字：")   # 用户输入 100
+print(type(x))               # <class 'str'> ！是字符串
+print(x + 1)                 # ❌ TypeError: can only concatenate str to str
+```
+
+## （三）输入类型转换（10分钟）⭐【本课难点与易错点】
+
+### 1. 三个转换函数
+
+```python
+x = input("请输入整数：")
+n = int(x)        # 转成整数
+f = float(x)      # 转成浮点数
+s = str(100)      # 转成字符串
+```
+
+### 2. 经典场景：数字计算
+
+```python
+# ❌ 错误写法（学生最常见的错误！）
+a = input("请输入第一个数：")    # 输入 3
+b = input("请输入第二个数：")    # 输入 5
+print(a + b)                    # 输出 35（字符串拼接！不是8）
+
+# ✅ 正确写法
+a = int(input("请输入第一个数："))
+b = int(input("请输入第二个数："))
+print(a + b)                    # 输出 8
+```
+
+**记忆口诀**：
+
+> "**input进来全是串，想要计算先转换；int转整float转浮，str转串往回还。**"
+
+### 3. 易错点逐个击破（板书重点）
+
+**易错点①：忘记转换就计算**
+
+```python
+age = input("请输入年龄：")
+print(age + 1)        # ❌ TypeError
+print(int(age) + 1)   # ✅
+```
+
+**易错点②：int()转换含小数的字符串报错**
+
+```python
+int("3.5")     # ❌ ValueError: invalid literal for int()
+int(float("3.5"))   # ✅ 先float再int，得3
+float("3.5")   # ✅ 3.5
+```
+
+**易错点③：转换带空格的"脏数据"**
+
+```python
+int("  18  ")    # ✅ 18（int()会自动忽略首尾空白）
+int("18岁")      # ❌ ValueError（混有汉字等非数字字符时报错）
+int("十八")      # ❌ ValueError（int()不识别中文数字）
+```
+
+**教学处理**：让学生动手试 `int("18岁")`，观察 `ValueError`，并引出**健壮性**概念——真实程序中要用strip()先清洗输入（呼应环节二的strip！）。
+
+```python
+# 健壮的输入模式（工程实践推荐）
+raw = input("请输入年龄：")
+age = int(raw.strip())      # 先清洗，再转换
+```
+
+**易错点④：一次输入多个数，不会拆分**
+
+```python
+# 用户习惯输入：3 5（空格分隔）
+a, b = input("请输入两个数（空格分隔）：").split()
+a = int(a)
+b = int(b)
+print(a + b)
+
+# 更简洁的写法（了解）
+a, b = map(int, input("请输入两个数：").split())
+```
+
+**易错点⑤：eval()的诱惑与风险（提醒，不作要求）**
+
+```python
+x = eval(input("请输入："))   # 输入 3+5，x直接是8
+```
+
+> ⚠️ 教师强调：`eval()` 会执行用户输入的任意代码，存在**安全隐患**，真实开发中**禁止使用**。本课只许用 int()/float() 做显式转换，养成安全编程习惯。
+
+### 4. 类型转换对照表（板书）
+
+| 原数据 | 转换目标 | 写法 | 结果 |
+|--------|----------|------|------|
+| "18" | int | `int("18")` | 18 |
+| "3.5" | float | `float("3.5")` | 3.5 |
+| 18 | str | `str(18)` | "18" |
+| 3.99 | int | `int(3.99)` | 3（直接截断，不四舍五入！） |
+| "3.5" | int | `int("3.5")` | ❌ 报错 |
+
+**补充易错点**：`int(3.99)` 得 3 而不是 4——int()转换是**直接截断**小数部分，如需四舍五入用 `round()`。
+
+### 5. 课堂即时练习（2分钟）
+
+学生现场完成，教师巡视并投屏典型错误：
+
+```python
+# 练习：输入圆的半径（浮点数），输出圆的面积（保留2位小数）
+import math
+r = float(input("请输入圆的半径："))
+area = math.pi * r ** 2
+print(f"圆的面积为：{area:.2f}")
 ```
 
 ---
 
-## 二、作用域与闭包
+# 环节四：实践编程（30分钟）
 
-### 2.1 作用域链
+> **组织形式**：学生独立上机操作，教师巡视指导；每个任务设置"基础版—进阶版"分层要求，先完成基础版的同学挑战进阶版。
 
-```javascript
-const globalVar = '我是全局变量';
+## 实践任务一：AI文本清洗（10分钟）——对应重点 strip()/split()
 
-function outer() {
-  const outerVar = '我是外部变量';
-  
-  function inner() {
-    const innerVar = '我是内部变量';
-    console.log(globalVar); // 可以访问
-    console.log(outerVar);  // 可以访问
-  }
-  
-  inner();
-}
+**任务描述**：打开下发的 `dialogue.txt`，用Python清洗这段AI对话文本，完成：
+1. 读取全部文本，去除每行首尾空白；
+2. 去掉空行；
+3. 把清洗后的对话按"用户/AI"分行打印。
+
+**参考代码**：
+
+```python
+with open("dialogue.txt", encoding="utf-8") as f:
+    lines = f.readlines()
+
+clean_lines = []
+for line in lines:
+    line = line.strip()          # 第一道工序：去首尾空白（AI赋能点①）
+    if line:                      # 第二道工序：过滤空行
+        clean_lines.append(line)
+
+for line in clean_lines:
+    print(line)
 ```
 
-### 2.2 闭包示例
+**进阶版**：统计清洗后"用户"说了几句话、"AI"说了几句话（用 `startswith("用户")` 判断）。
 
-```javascript
-function createCounter() {
-  let count = 0;
-  return {
-    increment: () => ++count,
-    decrement: () => --count,
-    getCount: () => count
-  };
-}
+**参考答案（进阶）**：
 
-const counter = createCounter();
-counter.increment(); // 1
-counter.increment(); // 2
+```python
+user_count = 0
+ai_count = 0
+for line in clean_lines:
+    if line.startswith("用户"):
+        user_count += 1
+    elif line.startswith("AI"):
+        ai_count += 1
+print(f"用户说了{user_count}句，AI说了{ai_count}句")
 ```
+
+**教师巡视要点**：
+- 学生是否记得 strip() 的返回值要接住了再用；
+- 过滤空行时是否误用 `if line != " "`（应使用 `if line`，空字符串为假）。
+
+## 实践任务二：对话分句处理（10分钟）——对应难点 split() + 列表
+
+**任务描述**：把一段长对话按标点切分成单个句子，为"逐句送入AI模型"做准备。
+
+**素材**：
+
+```python
+dialogue = "你好！请问今天天气怎么样？明天会下雨吗！记得带伞哦。好的谢谢"
+```
+
+**参考代码**：
+
+```python
+dialogue = "你好！请问今天天气怎么样？明天会下雨吗！记得带伞哦。好的谢谢"
+
+# 统一标点后再切分（AI赋能点②：分句）
+normalized = dialogue.replace("！", "。").replace("？", "。")
+sentences = normalized.split("。")
+
+# 过滤切分产生的空字符串
+sentences = [s for s in sentences if s]
+# 尚未学列表推导式的班级，可用for循环版本：
+# sentences = []
+# for s in normalized.split("。"):
+#     if s:
+#         sentences.append(s)
+
+for i, s in enumerate(sentences, 1):
+    print(f"第{i}句：{s}")
+```
+
+**输出**：
+
+```
+第1句：你好
+第2句：请问今天天气怎么样
+第3句：明天会下雨吗
+第4句：记得带伞哦
+第5句：好的谢谢
+```
+
+**进阶版**：统计每句话的字数，找出最长的一句（考察 len() 与循环）。
+
+**教师巡视要点**：
+- split("。") 产生的空串问题（句尾有"。"时会切出空串），引出 `if s` 过滤——呼应理论课易错点；
+- replace链式调用：只替换不接收返回值是无效的。
+
+## 实践任务三：AI提示词模板生成器（10分钟）——综合应用：输入 + 类型转换 + 格式化【AI赋能点③】
+
+**任务描述**：编写一个"AI提示词生成器"程序：通过 input() 询问用户的角色设定、写作主题、目标读者、字数要求，自动生成一段规范的提示词（prompt）并输出。
+
+**参考代码**：
+
+```python
+print("====== AI提示词生成器 ======")
+
+role   = input("请设定AI的角色（如：小学语文老师）：")
+topic  = input("请输入写作主题（如：春天）：")
+reader = input("请输入目标读者（如：三年级学生）：")
+
+# ⚠️ 本任务的易错点：数字必须转换类型！
+words_raw = input("请输入字数要求（如：300）：")
+words = int(words_raw.strip())      # 清洗 + 转换，呼应难点
+
+# 用format()填入模板（模板可复用，贴近真实开发）
+template = (
+    "你是一位{role}。请用适合{reader}理解的语言，"
+    "写一篇关于{topic}的文章，字数控制在{words}字左右，"
+    "要求内容积极健康、结构完整。"
+)
+prompt = template.format(role=role, reader=reader, topic=topic, words=words)
+
+print("\n===== 生成的提示词 =====")
+print(prompt)
+```
+
+**示例运行**：
+
+```
+====== AI提示词生成器 ======
+请设定AI的角色（如：小学语文老师）：科普作家
+请输入写作主题（如：春天）：人工智能
+请输入目标读者（如：三年级学生）：初中生
+请输入字数要求（如：300）：500
+
+===== 生成的提示词 =====
+你是一位科普作家。请用适合初中生理解的语言，写一篇关于人工智能的文章，字数控制在500字左右，要求内容积极健康、结构完整。
+```
+
+**进阶版**：
+1. 用f-string再输出一句"生成完成！提示词共X个字符"（考察len()）；
+2. 把生成的提示词追加保存到文件 `prompts.txt` 中（预习文件写入）。
+
+**教师巡视要点**：
+- 学生是否在 `int()` 转换时报错——排查是否忘记strip、是否输入了非数字；
+- 引导学生体会：模板（template）固定、参数（format的参数）动态——这正是AI工程化的基本思路。
 
 ---
 
-## 三、模块化
+# 环节五：总结与作业布置（5分钟）
 
-### 3.1 导出模块
+## （一）课堂小结（教师引导学生一起回顾，3分钟）
 
-```javascript
-// math.js
-export const PI = 3.14159;
+**1. 一句话总结本课**：
 
-export function add(a, b) {
-  return a + b;
-}
+> "字符串是Python最常用的数据类型：**切片**取片段、**方法**做加工、**格式化**填模板；**input进来全是串，计算之前先转换**。"
 
-export default class Calculator {
-  // ...
-}
+**2. 知识点思维导图（板书/PPT）**：
+
+```
+字符串与输入输出
+├── 字符串基本操作
+│   ├── 索引 s[i] / 切片 s[a:b:c]（左闭右开）
+│   ├── 常用方法 ⭐
+│   │   ├── strip()  → 清洗首尾噪声（NLP文本清洗）
+│   │   ├── split()  → 对话分句处理
+│   │   ├── join() / replace() / find() / upper()...
+│   │   └── ⚠️ 字符串不可变：方法返回新串，须重新赋值
+│   └── 字符串格式化：f-string（主推）/ format()（AI提示词模板）/ %
+└── 输入输出
+    ├── print(sep=, end=)
+    ├── input() → 永远返回 str ⭐难点
+    └── 类型转换：int() / float() / str()
+        └── ⚠️ int("3.5")报错；int(3.99)=3；eval()禁用
 ```
 
-### 3.2 导入模块
+**3. AI赋能回顾（30秒）**：
 
-```javascript
-// main.js
-import Calculator, { PI, add } from './math.js';
+> "今天我们做的三件事——strip()清洗文本噪声、split()对话分句、格式化生成提示词——正是真实AI项目中数据预处理与提示词工程的基础动作。大家已经迈出了成为AI工程师的第一步。"
 
-console.log(PI);        // 3.14159
-console.log(add(2, 3)); // 5
-```
+## 附录：常用字符串方法速查卡
 
----
+| 方法 | 功能 | 示例 | 结果 |
+|------|------|------|------|
+| `s.strip()` | 去首尾空白 | `"  hi  ".strip()` | `"hi"` |
+| `s.split(sep)` | 拆分 | `"a,b".split(",")` | `["a","b"]` |
+| `sep.join(lst)` | 连接 | `",".join(["a","b"])` | `"a,b"` |
+| `s.replace(a,b)` | 替换 | `"a-b".replace("-","+")` | `"a+b"` |
+| `s.find(sub)` | 找位置 | `"abc".find("b")` | `1` |
+| `s.index(sub)` | 找位置 | `"abc".index("x")` | ❌报错 |
+| `s.upper()` | 转大写 | `"ab".upper()` | `"AB"` |
+| `s.lower()` | 转小写 | `"AB".lower()` | `"ab"` |
+| `s.count(sub)` | 计数 | `"aab".count("a")` | `2` |
+| `s.startswith(p)` | 前缀判断 | `"abc".startswith("a")` | `True` |
+| `s.endswith(p)` | 后缀判断 | `"abc".endswith("c")` | `True` |
+| `len(s)` | 长度 | `len("abc")` | `3` |
+| `s[::-1]` | 逆序 | `"abc"[::-1]` | `"cba"` |
 
-## 小结
-
-- 灵活使用三种函数定义方式
-- 理解作用域链和闭包的原理
-- 使用 ES Module 组织代码结构
+> ⚠️ 以上方法均返回新对象，**原字符串不变**，切记重新赋值！

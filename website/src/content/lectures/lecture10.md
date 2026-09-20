@@ -1,5 +1,5 @@
 ---
-title: "状态管理与路由"
+title: 类与对象 - 定义和调用
 lectureNumber: 10
 draft: false
 ---

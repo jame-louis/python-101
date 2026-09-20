@@ -1,5 +1,5 @@
 ---
-title: "课程介绍与开发环境搭建"
+title: 课程介绍与开发环境搭建
 lectureNumber: 1
 slidevUrl: /slides/lecture01  # 有在线课件时填写，首页会自动显示“课件”链接
 draft: false

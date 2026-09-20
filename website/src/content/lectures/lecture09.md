@@ -1,5 +1,5 @@
 ---
-title: "前端框架入门"
+title: 函数 - 匿名函数、内置函数与异常处理
 lectureNumber: 9
 draft: false
 ---

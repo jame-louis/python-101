@@ -1,5 +1,5 @@
 ---
-title: "DOM 操作与事件处理"
+title: 组合数据类型 · 列表与元组
 lectureNumber: 4
 draft: false
 ---

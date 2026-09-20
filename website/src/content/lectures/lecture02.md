@@ -1,5 +1,5 @@
 ---
-title: "核心语法与数据类型"
+title: 简单数据类型
 lectureNumber: 2
 draft: false
 ---
