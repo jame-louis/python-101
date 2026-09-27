@@ -1,6 +1,7 @@
 ---
 title: 组合数据类型 · 列表与元组
 lectureNumber: 4
+slidevUrl: slides/lecture04
 draft: false
 ---
 
@@ -258,16 +259,6 @@ for w in nouns:
 | `nums[5]` 但长度只有 4 | 下标越界 | 先看 `len`，或遍历 |
 | `t = (5)` 想要单元素元组 | 少了逗号 | 写 `t = (5,)` |
 | `sort()` 后想保留原列表 | 原地修改 | 用 `sorted(list)` |
-
----
-
-## 实验任务
-
-- 🔵 基础任务：列表 CRUD + 遍历；创建/访问元组
-- 🟡 进阶任务：`extend`/`insert` 构建数据集；`sort` 损失；元组解包；AI 文本批量清洗
-- 🔴 挑战任务：用列表 + `insert`/`sort` + 元组管理并分析一组数据
-
-提交要求：可运行的 `.py` 文件 + 关键输出截图。
 
 ---
 
