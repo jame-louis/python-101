@@ -1,0 +1,6 @@
+1 2 3
+4
+append 4
+append 5
+insert 1 99
+extend 7 8

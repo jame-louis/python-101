@@ -1,0 +1,6 @@
+4
+78 88 95 66
+3
+append 100
+insert 1 99
+remove 95
