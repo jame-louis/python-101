@@ -1,6 +1,7 @@
-title: 文本转小写清洗
+title: 成绩统计（综合选做）
 tag:
-  - 字符串
-  - 批量处理
+  - 列表
+  - 排序
+  - 统计
 pid: P0404
-difficulty: 1
+difficulty: 2

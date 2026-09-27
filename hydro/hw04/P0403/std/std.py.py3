@@ -1,16 +1,13 @@
-# P0403 元组解包与坐标统计 标程
-m = int(input())
-points = []
-for _ in range(m):
-    x, y = map(int, input().split())
-    points.append((x, y))
+# P0403 元组创建与解包（基础·无输入）标程
+t = (10, 20, 30)
+print(t[0], t[-1], len(t))   # 下标访问 10 30 3
 
-sum_x = 0
-sum_y = 0
-for point in points:
-    x, y = point          # 元组解包
-    sum_x += x
-    sum_y += y
-    print(f"{x} + {y} = {x + y}")
-print(f"sum_x = {sum_x}")
-print(f"sum_y = {sum_y}")
+a, b, c = t                  # 三元素解包
+print(a, b, c)               # 10 20 30
+
+point = (3, 5)
+x, y = point                 # 坐标对解包
+print(f"({x}, {y})", x + y)  # (3, 5) 8
+
+t2 = (7,)                    # 单元素元组必须有逗号
+print(t2, len(t2))           # (7,) 1

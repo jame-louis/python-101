@@ -1,13 +1,16 @@
-# P0402 三种插入方法 标程  (append / extend / insert)
-lst = [int(x) for x in input().split()]
-k = int(input())
-for _ in range(k):
-    parts = input().split()
-    op = parts[0]
-    if op == 'append':
-        lst.append(int(parts[1]))
-    elif op == 'extend':
-        lst.extend(int(x) for x in parts[1:])
-    elif op == 'insert':
-        lst.insert(int(parts[1]), int(parts[2]))
-print(' '.join(map(str, lst)))
+# P0402 三种插入方法（基础·无输入）标程
+lst = [1, 2, 3]
+lst.append(4)        # 追加一个元素
+print(lst)           # [1, 2, 3, 4]
+
+lst2 = [1, 2, 3]
+lst2.extend([4, 5])  # 展开拼接
+print(lst2)          # [1, 2, 3, 4, 5]
+
+lst3 = [1, 2, 3]
+lst3.insert(1, 99)   # 位置 1 前插入
+print(lst3)          # [1, 99, 2, 3]
+
+lst5 = [1, 2, 3]
+lst5.append([4, 5])  # 易错：整体追加一个列表
+print(lst5)          # [1, 2, 3, [4, 5]]

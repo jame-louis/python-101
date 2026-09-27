@@ -44,3 +44,21 @@ as a single static `site/`.
 - Incremental slide check only tracks the deck's own `.md`; shared includes
   (`pages/`, `snippets/`, `components/`, theme) need `--force` after changes.
 - A root `.gitignore` exists now; no automated sync between `src/` and `website/src/content/`.
+
+## Hydro OJ problem sets (`hydro/`)
+
+Recurring deliverable: the instructor turns each homework into Hydro judge problems in `hydro/hwNN/`
+(one self-contained package per problem, PIDs increment per lecture). Cross-cutting constraints:
+
+- **Beginner Python, not C++.** The `/hydro-problem` skill's templates are C++-oriented and assume
+  loops/branches; adapt them. Standard solution file is `std/std.py.py3` (Hydro Python3 language key).
+- **Match what students know.** At hw04 the class has **not** learned `if`/`for`/`while`, so every
+  problem must be solvable with **no loops and no branches** — only built-ins (`sorted`, `min`, `max`,
+  `sum`, `len`, `list.index`, slicing) and one-shot `input().split()+map()` line reading.
+- **Set shape** (user-chosen): 5 problems per homework = 3 基础 (may be no-input, fixed output;
+  `.in` holds a `no-input` marker, small case count) + 2 综合/选做 (with input).
+- **Input problems grade by strict byte-exact match** (classic traditional judge, no SPJ): the prompt
+  string is fixed in the statement and the `std` emits the same prompt (then a `print()` blank line,
+  then results); students must reproduce it 逐字 (含全角冒号).
+- Sample test case is always `1.in/1.out` and must match `problem_zh.md`. Validate with
+  `python3 hydro/hw04/validate.py` (reads case counts from each `config.yaml`).
