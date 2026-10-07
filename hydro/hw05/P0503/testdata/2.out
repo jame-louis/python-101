@@ -1,0 +1,6 @@
+Alice
+{'name': 'Alice', 'age': 21, 'city': 'Xiamen'}
+['name', 'age', 'city']
+['Alice', 21, 'Xiamen']
+[('name', 'Alice'), ('age', 21), ('city', 'Xiamen')]
+无邮箱
