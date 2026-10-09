@@ -6,7 +6,7 @@
 
 ```python
 class Student:
-    school = "嘉庚学院"          # 类属性 → 所有实例共享
+    school = "xx学院"          # 类属性 → 所有实例共享
     def __init__(self, name):
         self.name = name        # 实例属性 → 每实例独立
 ```
@@ -29,7 +29,7 @@ class Student:
 共三行：
 
 ```
-嘉庚学院 嘉庚学院
+xx学院 xx学院
 阿明 小红
 新学院 新学院
 ```
@@ -41,7 +41,7 @@ class Student:
 ```
 
 ```output1
-嘉庚学院 嘉庚学院
+xx学院 xx学院
 阿明 小红
 新学院 新学院
 ```
@@ -49,7 +49,7 @@ class Student:
 ## 提示
 
 - 实例化：`s1 = Student("小明")`、`s2 = Student("小红")`。
-- 第一步：`print(s1.school, s2.school)` → 共享，都嘉庚学院。
+- 第一步：`print(s1.school, s2.school)` → 共享，都xx学院。
 - 第二步：`s1.name = "阿明"`；`print(s1.name, s2.name)` → 阿明 小红。
 - 第三步：`Student.school = "新学院"`；`print(s1.school, s2.school)` → 都新学院。
 

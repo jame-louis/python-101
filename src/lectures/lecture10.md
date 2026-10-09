@@ -57,7 +57,7 @@ graph LR
 
 ```python
 class Student:
-    school = "厦门大学嘉庚学院"   # 类属性（共享）
+    school = "xx大学xx学院"   # 类属性（共享）
 
     def __init__(self, name, age):   # 构造函数
         self.name = name             # 实例属性（个性）
@@ -111,7 +111,7 @@ print(s.name, s.age)
 
 ```python
 class Student:
-    school = "嘉庚学院"      # 类属性 → 大家都一样
+    school = "xx学院"      # 类属性 → 大家都一样
     def __init__(self, name):
         self.name = name     # 实例属性 → 每人不同
 

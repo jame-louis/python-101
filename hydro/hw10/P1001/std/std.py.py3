@@ -1,6 +1,6 @@
 # P1001 定义类并调用（基础·无输入）标程
 class Student:
-    school = "嘉庚学院"
+    school = "xx学院"
 
     def __init__(self, name, age):
         self.name = name

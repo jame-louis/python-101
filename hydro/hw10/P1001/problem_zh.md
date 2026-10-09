@@ -6,7 +6,7 @@
 
 ```python
 class Student:
-    school = "嘉庚学院"
+    school = "xx学院"
     def __init__(self, name, age):
         self.name = name
         self.age = age
@@ -26,8 +26,8 @@ class Student:
 共两行：
 
 ```
-我是小明，20岁，来自嘉庚学院
-我是小红，21岁，来自嘉庚学院
+我是小明，20岁，来自xx学院
+我是小红，21岁，来自xx学院
 ```
 
 ## 样例 #1
@@ -37,8 +37,8 @@ class Student:
 ```
 
 ```output1
-我是小明，20岁，来自嘉庚学院
-我是小红，21岁，来自嘉庚学院
+我是小明，20岁，来自xx学院
+我是小红，21岁，来自xx学院
 ```
 
 ## 提示

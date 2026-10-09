@@ -65,7 +65,7 @@ graph LR
 
 ```python
 class Student:
-    school = "嘉庚学院"          # 类属性（共享）
+    school = "xx学院"          # 类属性（共享）
 
     def __init__(self, name, age):   # 构造函数
         self.name = name             # 实例属性（个性）

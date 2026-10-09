@@ -1,6 +1,6 @@
 # P1002 类属性 vs 实例属性（基础·无输入）标程
 class Student:
-    school = "嘉庚学院"          # 类属性（共享）
+    school = "xx学院"          # 类属性（共享）
 
     def __init__(self, name):
         self.name = name        # 实例属性（独立）
