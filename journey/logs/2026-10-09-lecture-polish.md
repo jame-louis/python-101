@@ -30,3 +30,10 @@ Scope (user-confirmed): Standardize + fix; sync to **src + website/content** (sl
 ## Not done / follow-ups
 - **slides/ 16 套 Slidev 未同步**（本次范围外，用户选择）。deck 仍是旧/部分陈旧内容；如需对齐需逐套重写 + `npm run build:slides --force`。
 - 未重建 `site/` 镜像（构建工件，gitignored；CI 部署时自动生成）。建议 `npm run build`（根）再本地 `npm run dev` 目检。
+## Follow-up: slides synced (same date)
+- `slides/lecture01.md` was a **leftover HTML/front-end template** (Node/HTML/git) → fully rewritten to match the new Python lesson-01 (课程认识 → 环境搭建 → 第一个程序 → Hydro → 上机 → QA footer), film-style (cover/幕卡/v-clicks/讲者备注【空镜】【全景】【特写】【转场】).
+- `slides/lecture02.md` was **missing** → created for the rewritten Python lesson-02 (变量/类型/运算符/字符串分片/类型转换), same style.
+- Decks 03–16 already mirrored the preserved subject content (verified via lecture04) — left unchanged.
+- Fix: Shiki doesn't bundle `python-repl` → replaced with `python` in lecture01 deck.
+- Rebuilt: `npm run build:slides` → lecture01/02 built, 14 cached skipped; `slides/dist/` + `site/slides/` now have all 16 decks.
+- Site `base` resolved to `/python-101/` by the slide script (matches current `astro.config.mjs`); deploy CI keeps it in sync.
