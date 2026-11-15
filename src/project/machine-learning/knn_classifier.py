@@ -40,9 +40,29 @@ def knn_predict(X_train: np.ndarray, y_train: np.ndarray,
 
 
 # 2D 决策边界可视化（课件「降维便于画散点图」的兑现）
+# 配置 matplotlib 中文字体，避免坐标轴/标题中文乱码（□ 或方块）
+def _setup_cjk_font():
+    import matplotlib
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
+
+    # 常见系统中文字体（按使用频率排序），命中即可显示中文
+    candidates = ["PingFang SC", "Hiragino Sans GB", "Heiti SC", "Songti SC",
+                  "STHeiti", "Microsoft YaHei", "Noto Sans CJK SC",
+                  "Source Han Sans SC", "WenQuanYi Micro Hei"]
+    installed = {f.name for f in font_manager.fontManager.ttflist}
+    for name in candidates:
+        if name in installed:
+            plt.rcParams["font.sans-serif"] = [name] + plt.rcParams["font.sans-serif"]
+            break
+    # 负号正常显示（避免变成灰色方块）
+    matplotlib.rcParams["axes.unicode_minus"] = False
+
+
 def plot_knn_boundary(X2, y, k=5, no_plots=False):
     """在 2D 特征空间画 KNN 决策边界 + 样本点。返回相关结果供打印，边界图可选。"""
     if not no_plots:
+        _setup_cjk_font()
         import matplotlib.pyplot as plt
         from matplotlib.colors import ListedColormap
         cmap_light = ListedColormap(["#ffd6cf", "#cfeaff", "#e2f6d5"])
