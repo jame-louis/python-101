@@ -16,29 +16,14 @@ import argparse
 
 import numpy as np
 
+from plots import setup_zh_font
+
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
 
-def setup_zh_font():
-    import matplotlib.font_manager as fm
-    import matplotlib.pyplot as plt
-    """把可用的中文字体设为 matplotlib 默认字体，避免中文标签显示为方框/告警。"""
-    candidates = [
-        "PingFang SC", "Heiti SC", "Arial Unicode MS", "Songti SC",
-        "Hiragino Sans GB", "WenQuanYi Zen Hei", "Noto Sans CJK SC",
-        "Microsoft YaHei", "SimHei",
-    ]
-    installed = {f.name for f in fm.fontManager.ttflist}
-    for name in candidates:
-        if name in installed:
-            plt.rcParams["font.family"] = name
-            plt.rcParams["axes.unicode_minus"] = False
-            return name
-    return None
-
-
 setup_zh_font()
+
 # --------------------------------------------------------------------------
 # numpy 手写简化 k-means：选中心 → 分配 → 更新 → 迭代
 # --------------------------------------------------------------------------
