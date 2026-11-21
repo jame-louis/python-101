@@ -12,11 +12,12 @@ slidevUrl: slides/lecture11
 | 环节 | 内容 | 时长 |
 |---|---|---|
 | 回顾/导入 | 10 面向对象回顾 + "各种动物" 提问 | 8 |
-| 环节一 | 继承：基础语法、层级、属性方法继承 | 15 |
+| 环节一 | 继承：基础语法、层级、属性方法继承 | 12 |
 | 环节二 | 方法重写（override） | 10 |
 | 环节三 | 构造器继承：两种写法（难点） | 15 |
-| 环节四 | 多态：统一接口、不同实现 | 15 |
-| 环节五 | AI 赋能：train()/predict() 封装 | 12 |
+| 环节四 | 多态：统一接口、不同实现 | 10 |
+| 环节五 | 模块导入：import 三种写法 + 类拆进模块 | 12 |
+| 环节六 | AI 赋能：train()/predict() 封装 | 8 |
 | 随堂练习 | 继承 / 重写 / super 辨析 | 5 |
 | 上机实践 | 基础 → 进阶 → 综合 → 挑战 | 5 |
 | 小结 + 作业 | HW11 · 下讲预告 | 5 |
@@ -31,6 +32,7 @@ slidevUrl: slides/lecture11
 - 对比**两种构造器继承写法**（不写 `__init__` vs `super().__init__()` 扩展）
 - 用继承、方法重写与 `super()` 编写层级结构的类
 - 用**多态**编写"同一接口、不同实现"的可扩展程序
+- 用**模块导入**（`import` / `from ... import ...`）把类拆到独立 `.py` 文件再复用
 - 体会 AI 模型类 `train()`/`predict()` 的接口与封装思想
 
 ---
@@ -234,6 +236,72 @@ graph LR
 
 ---
 
+# 模块导入（一）什么是模块
+
+一个 `.py` 文件就是一个**模块（module）**——它把一组相关的类/函数/常量打包存起来，别人用 `import` 就能复用，不用把代码复制一遍。
+
+> 你从第 1 讲起就在用别人写好的模块：`import math`、`import numpy as np`。今天学会自己拆分、自己导入。
+
+**模块 = 放在文件里的"零件盒"**：写好一次，随处 `import`。
+
+---
+
+# 模块导入（二）三种写法
+
+| 写法 | 用时 | 使用方式 |
+|---|---|---|
+| `import 模块名` | 导入整个模块 | `math.pi`、`math.sqrt(2)` |
+| `import 模块名 as 别名` | 名字太长，起个别名 | `import numpy as np` → `np.array(...)` |
+| `from 模块名 import 成员` | 只想用其中几个 | `from math import pi, sqrt` → 直接 `pi`、`sqrt(2)` |
+
+```python
+import math                  # 整个模块
+print(math.pi)               # 3.1415...
+
+import numpy as np           # 别名（机器学习惯例写法）
+arr = np.array([1, 2, 3])
+
+from math import pi, sqrt    # 按名导入
+print(pi, sqrt(2))
+```
+
+> **命名规范**：`import 模块名 as 别名` 推荐用小写+下划线（如 `np`、`plt`）；按名导入时别和变量重名。
+
+---
+
+# 模块导入（三）把类拆进模块
+
+写完的类放到独立 `.py` 文件里，主程序 `import` 后照常使用——**代码组织的第一步**。
+
+`animals.py`（一个模块，存动物相关的类）：
+
+```python
+# animals.py —— 动物模块
+class Animal:
+    def __init__(self, name):
+        self.name = name
+    def speak(self):
+        return f"{self.name} 发出叫声"
+
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name} 汪汪叫！"
+```
+
+`main.py`（主程序，导入使用）：
+
+```python
+# main.py —— 使用 animals 模块
+from animals import Dog, Animal     # 按名导入两个类
+
+d = Dog("旺财")
+print(d.speak())                    # 旺财 汪汪叫！
+```
+
+> 两个文件放在**同一文件夹**即可 `import`；`from xxx import *` 会一口气导入所有公有成员，但**不推荐**——容易和变量名冲突，可读性差。
+
+---
+
 # AI 赋能点 ⭐ 类是算法的封装载体
 
 在 AI 模型开发中，类把"算法逻辑"封装起来，对外只暴露两个公共方法：
@@ -282,6 +350,7 @@ print(result)
 1. **口答**：`class Dog(Animal)` 里的 `Animal` 是什么？`Dog` 自动获得什么？
 2. **辨析**：子类重写 `__init__` 时，为什么通常要写 `super().__init__(...)`？
 3. **预判**：`animals = [Dog("A"), Cat("B")]`，`for a in animals: print(a.speak())` 分别输出什么？
+4. **选择**：想用 `math` 里的 `sqrt`，用 `import math` 后怎么调用？用 `from math import sqrt` 呢？
 
 ## 上机实践（5 分钟）
 
@@ -289,7 +358,8 @@ print(result)
 - 🔵 基础任务②：构造器继承两种写法的对比小程序
 - 🟡 进阶任务③：用多态（父类列表统一调用接口）重构动物叫
 - 🟢 综合任务④：设计一个继承体系（如运输工具），验证继承+多态
-- 🔴 挑战任务⑤：`train()/predict()` + 私有权重的最小 AI 模型类
+- 🟢 综合任务⑤：把任务③的动物类拆进 `animals.py`，用 `from animals import ...` 在 `main.py` 里复用
+- 🔴 挑战任务⑥：`train()/predict()` + 私有权重的最小 AI 模型类
 
 提交要求：规范命名的 `.py` + 运行结果截图；先跑通两个基础任务。
 
@@ -303,6 +373,8 @@ print(result)
 | 子类方法没生效 | 方法名拼写不一致，未真正重写 | 核对方法名是否与父类一致 |
 | 父类属性未初始化报错 | 同上 | 先 super() 再设新属性 |
 | 多态不用、改用一大堆类型判断 | 没理解接口思想 | 用统一接口 + 子类各自实现 |
+| `ModuleNotFoundError: No module named 'xxx'` | 文件不在同目录 / 模块名拼错 | 确认模块文件在同目录、名字拼对 |
+| `from xxx import C` 报 ImportError | 模块里没有 C 这个成员 | 打开模块文件核对 C 是否拼写一致 |
 
 ---
 
@@ -311,6 +383,7 @@ print(result)
 1. 为什么多态能让程序"对扩展开放、对修改关闭"？
 2. 构造器继承中，`super().__init__()` 没写会发生什么？为什么？
 3. 一个 AI 模型类把权重设为私有（`_w`），把 `train/predict` 设为公有，好处是什么？
+4. 图方便用 `from math import *` 有什么潜在风险？为什么推荐按名导入？
 
 ---
 
@@ -320,7 +393,8 @@ print(result)
   1. 继承：`class B(A)`、属性/方法继承、方法重写
   2. 难点：构造器继承两种写法（不写 `__init__` vs `super()` 扩展）
   3. 多态：同一接口、不同实现
-  4. AI 接口范式：`train()/predict()` + 私有权重封装
+  4. 模块导入：`import` / `as` 别名 / `from ... import ...`，把类拆进 `.py` 复用
+  5. AI 接口范式：`train()/predict()` + 私有权重封装
 - 作业：完成 HW11 → [第11讲作业](../assignments/hw11.md)
 - 下次课：**类的构造器与综合应用巩固 / 下一语法章节预告**
 - 预习：完善综合任务④；完成 HW11
