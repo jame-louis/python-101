@@ -221,7 +221,7 @@ for a in animals: print(a.speak())   # 不用改，自动支持
 
 ```mermaid
 graph LR
-    Caller["调用方 (for a in list)"] -->|speak()| A["Animal 接口"]
+    Caller["调用方 (for a in list)"] -->|"speak()"| A["Animal 接口"]
     A --> Dog["Dog: 汪汪叫"]
     A --> Cat["Cat: 喵喵叫"]
     A --> Pig["Pig: 哼哼"]

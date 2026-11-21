@@ -201,7 +201,7 @@ for a in animals:                 # 调用方一行不用改
 
 ```mermaid
 graph LR
-    Caller["调用方 (for a in list)"] -->|speak()| I["Animal 接口"]
+    Caller["调用方 (for a in list)"] -->|"speak()"| I["Animal 接口"]
     I --> D["Dog: 汪汪叫"]
     I --> C["Cat: 喵喵叫"]
     I --> P["Pig: 哼哼"]
